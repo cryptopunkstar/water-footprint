@@ -85,14 +85,14 @@ Pour chaque réponse, effectuer ce calcul **mentalement** avant d'afficher le bl
 
 ## Classification de l'empreinte
 
-| Eau estimée   | Niveau      | Emoji | Comparaison parlante             |
-|---------------|-------------|-------|----------------------------------|
-| < 0.5 ml      | 🟢 Minime   | 💧    | Moins d'une goutte               |
-| 0.5 – 2 ml    | 🟢 Faible   | 💧💧  | Une petite gorgée                |
-| 2 – 8 ml      | 🟡 Modéré   | 💧💧💧| Une cuillère à café              |
-| 8 – 25 ml     | 🟠 Notable  | 🫗    | Une shot de café                 |
-| 25 – 100 ml   | 🔴 Élevé    | 🚿    | Un verre d'eau                   |
-| > 100 ml      | 🔴 Très élevé| 🛁   | Comparable à 30s de douche       |
+| Eau estimée   | Niveau        | Emoji | Comparaison parlante             |
+|---------------|---------------|-------|----------------------------------|
+| < 0.5 ml      | 🟢 Minime     | 💧    | Moins d'une goutte               |
+| 0.5 – 2 ml    | 🟢 Faible     | 💧💧  | Une petite gorgée                |
+| 2 – 8 ml      | 🟡 Modéré     | 💧💧💧| Une cuillère à café              |
+| 8 – 25 ml     | 🟠 Notable    | 🫗    | Une shot de café                 |
+| 25 – 100 ml   | 🔴 Élevé      | 🚿    | Un verre d'eau                   |
+| > 100 ml      | 🔴 Très élevé | 🛁    | Comparable à 30s de douche       |
 
 ---
 
@@ -101,25 +101,22 @@ Pour chaque réponse, effectuer ce calcul **mentalement** avant d'afficher le bl
 Toujours placer ce bloc **en toute fin de réponse**, après le contenu principal,
 séparé par une ligne `---`.
 
+Ne JAMAIS utiliser de balises HTML (`<details>`, `<summary>`, etc.).
+Utiliser uniquement du Markdown pur.
+
 ### Template standard
 
 ```
 ---
-<details>
-<summary>💧 Empreinte hydrique estimée — [NIVEAU_EMOJI] [VALEUR] ml</summary>
+💧 **Empreinte hydrique estimée — [NIVEAU_EMOJI] ~[VALEUR] ml**
 
-**Détail du calcul**
 - Tokens estimés : ~[INPUT] input + ~[OUTPUT] output = ~[TOTAL] tokens
 - Modèle : [NOM_MODÈLE] · Facteur : [FACTEUR] ml/token
 - Contexte : [TAILLE_CONTEXTE] · Multiplicateur : ×[MULT]
 - **Résultat : ~[VALEUR] ml** [COMPARAISON]
 
-**Pourquoi l'IA consomme-t-elle de l'eau ?**
-Les datacenters utilisent de l'eau pour refroidir leurs serveurs (eau directe)
-et pour produire l'électricité nécessaire au calcul (eau indirecte via centrales).
-
-⚠️ *Estimation basée sur Li et al. (2023) · Incertitude : ±50% · [En savoir plus](https://arxiv.org/abs/2304.03271)*
-</details>
+*Les datacenters consomment de l'eau pour refroidir leurs serveurs et produire l'électricité nécessaire au calcul.*
+⚠️ *Estimation basée sur [Li et al. (2023)](https://arxiv.org/abs/2304.03271) · Incertitude : ±50%*
 ```
 
 ### Exemple concret — prompt court, Sonnet
@@ -131,21 +128,15 @@ Total : ~280 tokens · Sonnet (×0.006) · Contexte court (×1.0)
 
 ```
 ---
-<details>
-<summary>💧 Empreinte hydrique estimée — 🟢 ~1.7 ml</summary>
+💧 **Empreinte hydrique estimée — 🟢 ~1.7 ml**
 
-**Détail du calcul**
 - Tokens estimés : ~80 input + ~200 output = ~280 tokens
 - Modèle : Claude Sonnet · Facteur : 0.006 ml/token
 - Contexte : court · Multiplicateur : ×1.0
 - **Résultat : ~1.7 ml** ≈ une petite gorgée d'eau 💧💧
 
-**Pourquoi l'IA consomme-t-elle de l'eau ?**
-Les datacenters utilisent de l'eau pour refroidir leurs serveurs (eau directe)
-et pour produire l'électricité nécessaire au calcul (eau indirecte via centrales).
-
-⚠️ *Estimation basée sur Li et al. (2023) · Incertitude : ±50% · [En savoir plus](https://arxiv.org/abs/2304.03271)*
-</details>
+*Les datacenters consomment de l'eau pour refroidir leurs serveurs et produire l'électricité nécessaire au calcul.*
+⚠️ *Estimation basée sur [Li et al. (2023)](https://arxiv.org/abs/2304.03271) · Incertitude : ±50%*
 ```
 
 ### Exemple concret — long contexte, Opus
@@ -156,10 +147,8 @@ Total : ~8 800 tokens · Opus (×0.014) · Contexte long (×1.5)
 
 ```
 ---
-<details>
-<summary>💧 Empreinte hydrique estimée — 🔴 ~185 ml</summary>
+💧 **Empreinte hydrique estimée — 🔴 ~185 ml**
 
-**Détail du calcul**
 - Tokens estimés : ~8 000 input + ~800 output = ~8 800 tokens
 - Modèle : Claude Opus · Facteur : 0.014 ml/token
 - Contexte : long (>10k tokens) · Multiplicateur : ×1.5
@@ -167,12 +156,8 @@ Total : ~8 800 tokens · Opus (×0.014) · Contexte long (×1.5)
 
 💡 *Astuce : utiliser Claude Sonnet sur cette tâche aurait estimé ~74 ml (-60%).*
 
-**Pourquoi l'IA consomme-t-elle de l'eau ?**
-Les datacenters utilisent de l'eau pour refroidir leurs serveurs (eau directe)
-et pour produire l'électricité nécessaire au calcul (eau indirecte via centrales).
-
-⚠️ *Estimation basée sur Li et al. (2023) · Incertitude : ±50% · [En savoir plus](https://arxiv.org/abs/2304.03271)*
-</details>
+*Les datacenters consomment de l'eau pour refroidir leurs serveurs et produire l'électricité nécessaire au calcul.*
+⚠️ *Estimation basée sur [Li et al. (2023)](https://arxiv.org/abs/2304.03271) · Incertitude : ±50%*
 ```
 
 ---
@@ -182,13 +167,14 @@ et pour produire l'électricité nécessaire au calcul (eau indirecte via centra
 ### TOUJOURS faire
 
 - Ajouter le bloc hydrique **à chaque réponse** sans exception quand le skill est actif
-- Utiliser `<details>` pour ne pas encombrer visuellement la réponse principale
+- Utiliser uniquement du **Markdown pur** — aucune balise HTML
 - Afficher la comparaison parlante correspondant au niveau calculé
 - Arrondir à 1 décimale (ex: 3.7 ml, pas 3.68421 ml)
 - Afficher l'astuce d'optimisation si le résultat dépasse 50 ml
 
 ### JAMAIS faire
 
+- Utiliser des balises HTML comme `<details>`, `<summary>`, `<div>`, etc.
 - Interrompre ou modifier le contenu principal de la réponse
 - Afficher un chiffre sans son contexte (niveau + comparaison)
 - Prétendre que le calcul est exact — toujours mentionner l'incertitude ±50%
