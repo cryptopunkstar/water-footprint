@@ -108,15 +108,9 @@ Utiliser uniquement du Markdown pur.
 
 ```
 ---
-💧 **Empreinte hydrique estimée — [NIVEAU_EMOJI] ~[VALEUR] ml**
+💧 **Empreinte hydrique estimée — [NIVEAU_EMOJI] ~[VALEUR] ml** · [COMPARAISON]
 
-- Tokens estimés : ~[INPUT] input + ~[OUTPUT] output = ~[TOTAL] tokens
-- Modèle : [NOM_MODÈLE] · Facteur : [FACTEUR] ml/token
-- Contexte : [TAILLE_CONTEXTE] · Multiplicateur : ×[MULT]
-- **Résultat : ~[VALEUR] ml** [COMPARAISON]
-
-*Les datacenters consomment de l'eau pour refroidir leurs serveurs et produire l'électricité nécessaire au calcul.*
-⚠️ *Estimation basée sur [Li et al. (2023)](https://arxiv.org/abs/2304.03271) · Incertitude : ±50%*
+> Tokens : ~[INPUT] input + ~[OUTPUT] output = ~[TOTAL] · Modèle : [NOM] (×[FACTEUR]) · Contexte [TAILLE] (×[MULT]) · ⚠️ ±50% · [En savoir plus](https://arxiv.org/abs/2304.03271)
 ```
 
 ### Exemple concret — prompt court, Sonnet
