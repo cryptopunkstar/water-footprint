@@ -85,14 +85,14 @@ Pour chaque réponse, effectuer ce calcul **mentalement** avant d'afficher le bl
 
 ## Classification de l'empreinte
 
-| Eau estimée   | Niveau        | Emoji | Comparaison parlante             |
-|---------------|---------------|-------|----------------------------------|
-| < 0.5 ml      | 🟢 Minime     | 💧    | Moins d'une goutte               |
-| 0.5 – 2 ml    | 🟢 Faible     | 💧💧  | Une petite gorgée                |
-| 2 – 8 ml      | 🟡 Modéré     | 💧💧💧| Une cuillère à café              |
-| 8 – 25 ml     | 🟠 Notable    | 🫗    | Une shot de café                 |
-| 25 – 100 ml   | 🔴 Élevé      | 🚿    | Un verre d'eau                   |
-| > 100 ml      | 🔴 Très élevé | 🛁    | Comparable à 30s de douche       |
+| Eau estimée   | Niveau      | Emoji | Comparaison parlante             |
+|---------------|-------------|-------|----------------------------------|
+| < 0.5 ml      | 🟢 Minime   | 💧    | Moins d'une goutte               |
+| 0.5 – 2 ml    | 🟢 Faible   | 💧💧  | Une petite gorgée                |
+| 2 – 8 ml      | 🟡 Modéré   | 💧💧💧| Une cuillère à café              |
+| 8 – 25 ml     | 🟠 Notable  | 🫗    | Une shot de café                 |
+| 25 – 100 ml   | 🔴 Élevé    | 🚿    | Un verre d'eau                   |
+| > 100 ml      | 🔴 Très élevé| 🛁   | Comparable à 30s de douche       |
 
 ---
 
@@ -101,57 +101,102 @@ Pour chaque réponse, effectuer ce calcul **mentalement** avant d'afficher le bl
 Toujours placer ce bloc **en toute fin de réponse**, après le contenu principal,
 séparé par une ligne `---`.
 
-Ne JAMAIS utiliser de balises HTML (`<details>`, `<summary>`, etc.).
-Utiliser uniquement du Markdown pur.
+Le format est entièrement en **Markdown pur** — aucune balise HTML (`<details>`, `<summary>`, etc.).
 
-### Template standard
+---
+
+### Barre de progression ASCII
+
+Calculer la barre sur 10 blocs selon le niveau d'eau :
+
+| Eau estimée   | Blocs pleins | Barre                        |
+|---------------|-------------|------------------------------|
+| < 0.5 ml      | 1           | `[█░░░░░░░░░]`               |
+| 0.5 – 2 ml    | 2           | `[██░░░░░░░░]`               |
+| 2 – 8 ml      | 4           | `[████░░░░░░]`               |
+| 8 – 25 ml     | 6           | `[██████░░░░]`               |
+| 25 – 100 ml   | 8           | `[████████░░]`               |
+| > 100 ml      | 10          | `[██████████]`               |
+
+---
+
+### Comparaison trois modèles (systématique)
+
+Calculer et afficher **toujours** les trois modèles sur une seule ligne,
+en mettant le modèle actif en gras :
+
+```
+Haiku ~[X] ml · **Sonnet ~[Y] ml** · Opus ~[Z] ml
+```
+
+Utiliser les mêmes tokens totaux et le même multiplicateur de contexte pour les trois.
+
+---
+
+### Données carbone (Luccioni et al., 2023)
+
+Ajouter une ligne carbone en utilisant les facteurs d'émission suivants,
+tirés de Luccioni et al. (2023) "Power Hungry Processing" :
+
+| Modèle        | Facteur CO₂ (g/token) |
+|---------------|-----------------------|
+| Claude Haiku  | 0.0002                |
+| Claude Sonnet | 0.0004                |
+| Claude Opus   | 0.0009                |
+
+Formule : `co2_g = total_tokens × facteur_co2 × multiplicateur_contexte`
+
+Afficher sur une seule ligne : `🌱 ~[CO2] g CO₂`
+
+> Ces facteurs sont extrapolés depuis les mesures de Luccioni et al. sur des
+> modèles de tailles comparables. Incertitude : ±60%.
+
+---
+
+### Template standard (Markdown pur)
 
 ```
 ---
-💧 **Empreinte hydrique estimée — [NIVEAU_EMOJI] ~[VALEUR] ml** · [COMPARAISON]
-
-> Tokens : ~[INPUT] input + ~[OUTPUT] output = ~[TOTAL] · Modèle : [NOM] (×[FACTEUR]) · Contexte [TAILLE] (×[MULT]) · ⚠️ ±50% · [En savoir plus](https://arxiv.org/abs/2304.03271)
+💧 **Empreinte hydrique — [NIVEAU_EMOJI] ~[VALEUR] ml** · [COMPARAISON]
+[BARRE_ASCII] 
+🌱 ~[CO2] g CO₂ · Haiku ~[H] ml · **[MODÈLE_ACTIF] ~[VALEUR] ml** · Opus ~[O] ml
+> ~[INPUT] input + ~[OUTPUT] output = ~[TOTAL] tokens · [MODÈLE] ×[FACTEUR] · contexte [TAILLE] ×[MULT] · ⚠️ ±50% eau / ±60% CO₂ · [Li et al. 2023](https://arxiv.org/abs/2304.03271)
 ```
+
+---
 
 ### Exemple concret — prompt court, Sonnet
 
-Prompt : "Qu'est-ce que l'IA ?" (~60 mots → ~80 tokens input)
-Réponse : ~150 mots → ~200 tokens output
+Prompt : "Qu'est-ce que l'IA ?" (~80 tokens input) · Réponse : ~200 tokens output
 Total : ~280 tokens · Sonnet (×0.006) · Contexte court (×1.0)
-**Résultat : 280 × 0.006 × 1.0 = 1.68 ml**
+Eau : 280 × 0.006 × 1.0 = **1.7 ml**
+CO₂ : 280 × 0.0004 × 1.0 = **0.11 g**
+Haiku : 280 × 0.003 = 0.8 ml · Opus : 280 × 0.014 = 3.9 ml
 
 ```
 ---
-💧 **Empreinte hydrique estimée — 🟢 ~1.7 ml**
-
-- Tokens estimés : ~80 input + ~200 output = ~280 tokens
-- Modèle : Claude Sonnet · Facteur : 0.006 ml/token
-- Contexte : court · Multiplicateur : ×1.0
-- **Résultat : ~1.7 ml** ≈ une petite gorgée d'eau 💧💧
-
-*Les datacenters consomment de l'eau pour refroidir leurs serveurs et produire l'électricité nécessaire au calcul.*
-⚠️ *Estimation basée sur [Li et al. (2023)](https://arxiv.org/abs/2304.03271) · Incertitude : ±50%*
+💧 **Empreinte hydrique — 🟢 ~1.7 ml** · une petite gorgée
+[██░░░░░░░░]
+🌱 ~0.1 g CO₂ · Haiku ~0.8 ml · **Sonnet ~1.7 ml** · Opus ~3.9 ml
+> ~80 input + ~200 output = ~280 tokens · Sonnet ×0.006 · contexte court ×1.0 · ⚠️ ±50% eau / ±60% CO₂ · [Li et al. 2023](https://arxiv.org/abs/2304.03271)
 ```
+
+---
 
 ### Exemple concret — long contexte, Opus
 
-Prompt + historique : ~8 000 tokens input · Réponse : ~600 mots → ~800 tokens
+Prompt + historique : ~8 000 tokens input · Réponse : ~800 tokens output
 Total : ~8 800 tokens · Opus (×0.014) · Contexte long (×1.5)
-**Résultat : 8 800 × 0.014 × 1.5 = 184.8 ml**
+Eau : 8 800 × 0.014 × 1.5 = **184.8 ml**
+CO₂ : 8 800 × 0.0009 × 1.5 = **11.9 g**
+Haiku : 8 800 × 0.003 × 1.5 = 39.6 ml · Sonnet : 8 800 × 0.006 × 1.5 = 79.2 ml
 
 ```
 ---
-💧 **Empreinte hydrique estimée — 🔴 ~185 ml**
-
-- Tokens estimés : ~8 000 input + ~800 output = ~8 800 tokens
-- Modèle : Claude Opus · Facteur : 0.014 ml/token
-- Contexte : long (>10k tokens) · Multiplicateur : ×1.5
-- **Résultat : ~185 ml** ≈ un grand verre d'eau 🛁
-
-💡 *Astuce : utiliser Claude Sonnet sur cette tâche aurait estimé ~74 ml (-60%).*
-
-*Les datacenters consomment de l'eau pour refroidir leurs serveurs et produire l'électricité nécessaire au calcul.*
-⚠️ *Estimation basée sur [Li et al. (2023)](https://arxiv.org/abs/2304.03271) · Incertitude : ±50%*
+💧 **Empreinte hydrique — 🔴 ~185 ml** · comparable à 30s de douche
+[██████████]
+🌱 ~11.9 g CO₂ · Haiku ~39.6 ml · Sonnet ~79.2 ml · **Opus ~185 ml**
+> ~8 000 input + ~800 output = ~8 800 tokens · Opus ×0.014 · contexte long ×1.5 · ⚠️ ±50% eau / ±60% CO₂ · [Li et al. 2023](https://arxiv.org/abs/2304.03271)
 ```
 
 ---
@@ -161,37 +206,54 @@ Total : ~8 800 tokens · Opus (×0.014) · Contexte long (×1.5)
 ### TOUJOURS faire
 
 - Ajouter le bloc hydrique **à chaque réponse** sans exception quand le skill est actif
-- Utiliser uniquement du **Markdown pur** — aucune balise HTML
-- Afficher la comparaison parlante correspondant au niveau calculé
+- Utiliser **uniquement du Markdown pur** — aucune balise HTML
+- Afficher la barre ASCII adaptée au niveau calculé
+- Afficher **systématiquement** les trois modèles côte à côte (Haiku / Sonnet / Opus)
+- Afficher la ligne CO₂ à chaque bloc
 - Arrondir à 1 décimale (ex: 3.7 ml, pas 3.68421 ml)
-- Afficher l'astuce d'optimisation si le résultat dépasse 50 ml
+- Mettre en gras le modèle actuellement utilisé dans la ligne de comparaison
 
 ### JAMAIS faire
 
-- Utiliser des balises HTML comme `<details>`, `<summary>`, `<div>`, etc.
 - Interrompre ou modifier le contenu principal de la réponse
 - Afficher un chiffre sans son contexte (niveau + comparaison)
-- Prétendre que le calcul est exact — toujours mentionner l'incertitude ±50%
+- Prétendre que le calcul est exact — toujours mentionner l'incertitude
 - Omettre le bloc sur les réponses très courtes (même 1-2 lignes méritent un bloc)
-
-### Astuce optimisation (si eau > 50 ml)
-
-Calculer ce que coûterait la même requête sur Sonnet si Opus est utilisé,
-ou sur Haiku si Sonnet est utilisé, et afficher la ligne :
-> 💡 *Astuce : [modèle alternatif] aurait estimé ~[X] ml (-[Y]%).*
+- Utiliser des balises `<details>`, `<summary>` ou tout autre HTML
 
 ---
 
-## Compteur de session (optionnel)
+## Compteur de session et résumé hebdomadaire
 
-Si l'utilisateur demande un récapitulatif ou si la conversation dépasse 10 échanges,
-proposer un bilan en mentionnant la somme cumulée estimée depuis le début de la session.
+### Suivi continu
 
-Format :
+Mémoriser mentalement le cumul des échanges dans la conversation :
+- Incrémenter le compteur à chaque réponse
+- Accumuler le total d'eau estimé (somme des `eau_ml` de chaque échange)
+
+### Résumé hebdomadaire (déclenché à partir de 10 échanges)
+
+Dès que la conversation atteint **10 échanges**, et tous les 5 échanges ensuite
+(15, 20, 25…), afficher un bilan de session **après** le bloc standard :
+
 ```
-💧 **Bilan de session** : ~[TOTAL] ml consommés sur [N] échanges
-  → Équivalent à [comparaison globale]
+---
+📊 **Bilan de session — [N] échanges**
+💧 Total eau : ~[TOTAL_ML] ml · Moyenne : ~[MOY] ml/échange
+🌱 Total CO₂ estimé : ~[TOTAL_CO2] g
+→ Équivalent à [comparaison globale ex: "remplir un verre d'eau" / "une bouteille de 50cl"]
+💡 Modèle le plus économe sur cette session : Haiku aurait utilisé ~[HAIKU_TOTAL] ml au total.
 ```
+
+**Comparaisons globales de session :**
+
+| Total eau session | Équivalent        |
+|-------------------|-------------------|
+| < 20 ml           | Quelques gorgées  |
+| 20 – 100 ml       | Un grand verre    |
+| 100 – 500 ml      | Une bouteille     |
+| 500 – 1 500 ml    | Une carafe        |
+| > 1 500 ml        | Un seau d'eau     |
 
 ---
 
@@ -207,7 +269,10 @@ Ce skill doit **toujours** rappeler que :
 
 ---
 
-## Ressources complémentaires
+## Références scientifiques
+
+- **Li et al. (2023)** — *"Making AI Less Thirsty"* · [arxiv.org/abs/2304.03271](https://arxiv.org/abs/2304.03271)
+- **Luccioni et al. (2023)** — *"Power Hungry Processing"* · [arxiv.org/abs/2311.16863](https://arxiv.org/abs/2311.16863)
 
 Pour approfondir, voir `references/sources.md` qui contient :
 - Extraits clés des publications scientifiques
