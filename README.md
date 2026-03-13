@@ -14,4 +14,4 @@ Skill calcule (en post-traitement) :
        ↓
 Affiche un widget discret dans l'interface :
   "💧 Cette réponse ≈ 0.3ml d'eau"
-<img width="888" height="389" alt="Screenshot from 2026-03-10 10-06-35" src="https://github.com/user-attachments/assets/cc7cf250-4cc6-4822-bd6d-b1a9cbeac50a" />
+<img width="863" height="342" alt="image" src="https://github.com/user-attachments/assets/47e46f11-2d6d-4b95-b7de-b4bd5c1580a8" />
